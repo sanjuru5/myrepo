@@ -20,15 +20,19 @@
 		},
 		"schema": [
 			{
+				"name": "EmployeeID",
 				"type": "String"
 			},
 			{
+				"name": "EmployeeName",
 				"type": "String"
 			},
 			{
+				"name": "Salary",
 				"type": "String"
 			},
 			{
+				"name": "DepartmentID",
 				"type": "String"
 			}
 		]

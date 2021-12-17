@@ -26,7 +26,7 @@
 					"name": "AlterRow1"
 				}
 			],
-			"script": "source(output(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string,\n\t\tColumn_4 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> blobstgemployee\nblobstgemployee alterRow(upsertIf(true()),\n\tpartitionBy('hash', 1)) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['Column_1'],\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tColumn_1,\n\t\tColumn_2,\n\t\tColumn_3,\n\t\tColumn_4\n\t),\n\tpartitionBy('hash', 1)) ~> sink1"
+			"script": "source(output(\n\t\tEmployeeID as string,\n\t\tEmployeeName as string,\n\t\tSalary as string,\n\t\tDepartmentID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> blobstgemployee\nblobstgemployee alterRow(upsertIf(true())) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['EmployeeID'],\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tEmployeeID,\n\t\tEmployeeName,\n\t\tSalary,\n\t\tDepartmentID\n\t)) ~> sink1"
 		}
 	}
 }
