@@ -1,0 +1,9 @@
+{
+	"name": "rg-dev-dfs",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "d08b5391-993b-4af9-b884-05a0a078072c",
+		"tenantId": "07655b80-4ff6-4e60-99b5-8d02985bf10e"
+	}
+}
