@@ -57,7 +57,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@and(or(greaterOrEquals(int(substring(item().name,1,4)),2018),\nlessOrEquals(int(substring(item().name,1,4)),2021)),\nendswith(item().name,'sales.csv'))",
+									"value": "@greaterOrEquals(int(substring(item().name,1,4)),2018)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
