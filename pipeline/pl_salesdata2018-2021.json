@@ -144,7 +144,7 @@
 												"storeSettings": {
 													"type": "AzureBlobStorageReadSettings",
 													"recursive": true,
-													"wildcardFolderPath": {
+													"wildcardFileName": {
 														"value": "@item().name",
 														"type": "Expression"
 													},
