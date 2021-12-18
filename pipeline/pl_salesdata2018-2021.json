@@ -57,7 +57,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greaterOrEquals(int(substring(item().name,1,4)),2018)",
+									"value": "@and(\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2018')),\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2019')))",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
