@@ -57,7 +57,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@and(\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2018')),\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2019')))",
+									"value": "@or(or(or(\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2018')),\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2019'))),\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2020'))),\nand(endswith(item().name,'sales.csv'),startswith(item().name,'2021')))\n",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
