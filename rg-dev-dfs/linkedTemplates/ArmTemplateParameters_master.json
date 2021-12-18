@@ -11,6 +11,9 @@
 		"ls_rgdevstgacct_blob_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
 		"containerUri": {
 			"value": ""
 		},
