@@ -16,12 +16,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_stgacct_source",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"fieldList": [],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
 						"enablePartitionDiscovery": false
@@ -112,7 +110,7 @@
 										},
 										"inputs": [
 											{
-												"referenceName": "ds_blob_rgdevstgacct",
+												"referenceName": "DelimitedText1",
 												"type": "DatasetReference"
 											}
 										],
