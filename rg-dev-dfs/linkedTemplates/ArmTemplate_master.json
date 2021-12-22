@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "rg-dev-dfs"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"ls_azuresqldb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_azuresqldb'"
@@ -14,10 +18,6 @@
 		"ls_rgdevstgacct_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_rgdevstgacct_blob'"
-		},
-		"AzureBlobStorage1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
 		"containerUri": {
 			"type": "string",
@@ -46,14 +46,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
 					"ls_azuresqldb_connectionString": {
 						"value": "[parameters('ls_azuresqldb_connectionString')]"
 					},
 					"ls_rgdevstgacct_blob_connectionString": {
 						"value": "[parameters('ls_rgdevstgacct_blob_connectionString')]"
-					},
-					"AzureBlobStorage1_connectionString": {
-						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					}
 				}
 			},
