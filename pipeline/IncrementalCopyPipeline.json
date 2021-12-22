@@ -94,10 +94,7 @@
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
 							"quoteAllText": true,
-							"fileExtension": {
-								"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
-								"type": "Expression"
-							}
+							"fileExtension": ".txt"
 						}
 					},
 					"enableStaging": false,
