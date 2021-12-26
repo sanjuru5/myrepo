@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
+					"value": "'Incremental'",
 					"type": "Expression"
 				},
 				"folderPath": "data_source_folder",
