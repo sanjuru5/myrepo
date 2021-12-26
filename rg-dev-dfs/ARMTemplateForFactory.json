@@ -297,7 +297,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from data_source_table where \nLastModifytime >'@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and \nLastModifytime < '{activity('LookupNewWaterMarkActivity').output.firstRow.NewWaterMarkValue}'",
+									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -370,7 +370,7 @@
 								},
 								"TableName": {
 									"value": {
-										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
+										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
 										"type": "Expression"
 									},
 									"type": "String"
