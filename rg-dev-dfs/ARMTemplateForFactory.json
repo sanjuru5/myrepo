@@ -242,7 +242,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"source": {
-											"type": "AzureSqlSource",
+											"type": "SqlServerSource",
 											"sqlReaderQuery": {
 												"value": "select * from watermarktable where TableName  =  '@{item().TABLE_NAME}'",
 												"type": "Expression"
@@ -251,7 +251,7 @@
 											"partitionOption": "None"
 										},
 										"dataset": {
-											"referenceName": "WatermarkDataset",
+											"referenceName": "WatermarkDataset_SQLServer",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
@@ -315,7 +315,7 @@
 										"source": {
 											"type": "SqlServerSource",
 											"sqlReaderQuery": {
-												"value": "select * from {@item().TABLE_NAME} where \n{@item().WaterMark_Column} > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and {@item().WaterMark_Column} <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+												"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -323,9 +323,18 @@
 										},
 										"sink": {
 											"type": "AzureSqlSink",
-											"sqlWriterStoredProcedureName": "{@item().StoredProcedureNameForMergeOperation}",
-											"sqlWriterTableType": "{@item().TableType}",
-											"storedProcedureTableTypeParameterName": "{@item().TABLE_NAME}",
+											"sqlWriterStoredProcedureName": {
+												"value": "@{item().StoredProcedureNameForMergeOperation}",
+												"type": "Expression"
+											},
+											"sqlWriterTableType": {
+												"value": "@{item().TableType}",
+												"type": "Expression"
+											},
+											"storedProcedureTableTypeParameterName": {
+												"value": "@{item().TABLE_NAME}",
+												"type": "Expression"
+											},
 											"disableMetricsCollection": false
 										},
 										"enableStaging": false,
@@ -347,13 +356,10 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "SinkDataset_AzureSQL",
+											"referenceName": "SinkDataset_new",
 											"type": "DatasetReference",
 											"parameters": {
-												" SinkTableName": {
-													"value": "{@item().TABLE_NAME}",
-													"type": "Expression"
-												}
+												"SinkTableName": "@{item().TABLE_NAME}"
 											}
 										}
 									]
@@ -417,9 +423,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/WatermarkDataset')]",
+				"[concat(variables('factoryId'), '/datasets/WatermarkDataset_SQLServer')]",
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_Multipletables')]",
-				"[concat(variables('factoryId'), '/datasets/SinkDataset_AzureSQL')]",
+				"[concat(variables('factoryId'), '/datasets/SinkDataset_new')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_azuresqldb')]"
 			]
 		},
@@ -1317,12 +1323,30 @@
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
-				"typeProperties": {
-					"table": {
-						"value": "@dataset(). SinkTableName",
-						"type": "Expression"
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_azuresqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SinkDataset_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_azuresqldb",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SinkTableName": {
+						"type": "string"
 					}
-				}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_azuresqldb')]"
