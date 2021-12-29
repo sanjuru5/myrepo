@@ -1,0 +1,23 @@
+{
+	"name": "attendancefiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_rgdevstgacct_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "nov1.txt",
+				"container": "attendanceexercise"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
