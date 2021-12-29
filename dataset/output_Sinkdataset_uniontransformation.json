@@ -1,0 +1,22 @@
+{
+	"name": "output_Sinkdataset_uniontransformation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_rgdevstgacct_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "test",
+				"container": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
