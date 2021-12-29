@@ -5,12 +5,20 @@
 			"referenceName": "ls_rgdevstgacct_blob",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "nov1.txt",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
 				"container": "attendanceexercise"
 			},
 			"columnDelimiter": ",",
