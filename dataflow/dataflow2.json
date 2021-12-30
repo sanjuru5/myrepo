@@ -6,15 +6,37 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "attendancefiles",
+						"referenceName": "november2",
 						"type": "DatasetReference"
 					},
 					"name": "attendancefiles"
+				},
+				{
+					"dataset": {
+						"referenceName": "november1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> attendancefiles"
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "attendancefiles",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Lookup1"
+				},
+				{
+					"name": "Select1"
+				}
+			],
+			"script": "source(output(\n\t\tStudentName as string,\n\t\tLocation as string,\n\t\tAge as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> attendancefiles\nsource(output(\n\t\tStudentName as string,\n\t\tLocation as string,\n\t\tAge as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nattendancefiles, source1 lookup(attendancefiles@StudentName == source1@StudentName,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> Lookup1\nLookup1 select(mapColumn(\n\t\tStudentName = attendancefiles@StudentName,\n\t\tLocation = attendancefiles@Location,\n\t\tAge = attendancefiles@Age\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }
