@@ -1,0 +1,66 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "myfactory587"
+		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"ds_azuresqldatabase_connectionString": {
+			"value": ""
+		},
+		"ls_azuresqldb_connectionString": {
+			"value": ""
+		},
+		"ls_blob587_connectionString": {
+			"value": ""
+		},
+		"ls_myabtrainigsdb_connectionString": {
+			"value": ""
+		},
+		"ls_mylake587_accountKey": {
+			"value": ""
+		},
+		"ls_mylake587_new_accountKey": {
+			"value": ""
+		},
+		"ls_rgdevstgacct_blob_connectionString": {
+			"value": ""
+		},
+		"mylinkedserviceforazuresql_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage1_properties_typeProperties_serviceEndpoint": {
+			"value": "https://myblob587.blob.core.windows.net/"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://mylake587.dfs.core.windows.net/"
+		},
+		"LS_KV_properties_typeProperties_baseUrl": {
+			"value": "https://my-kv-test-587.vault.azure.net/"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "DESKTOP-CV7BVDK\\Admin"
+		},
+		"ls_AzureSQLDB_KV_properties_typeProperties_connectionString_secretName": {
+			"value": "Azure-SQL-DB-PW"
+		},
+		"ls_mylake587_properties_typeProperties_url": {
+			"value": "https://mylake587.dfs.core.windows.net/"
+		},
+		"ls_mylake587_new_properties_typeProperties_url": {
+			"value": "https://mylake587.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
