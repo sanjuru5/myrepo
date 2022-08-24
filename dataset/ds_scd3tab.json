@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText2",
+	"name": "ds_scd3tab",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000-414dc9ce-8d0d-4035-95d6-c35c3464ec4a-c000.csv",
-				"fileSystem": "output"
+				"fileName": "scd3.txt",
+				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
@@ -24,15 +24,23 @@
 				"type": "String"
 			},
 			{
-				"name": "employee_name",
+				"name": "name",
 				"type": "String"
 			},
 			{
-				"name": "employee_salary",
+				"name": "salary",
 				"type": "String"
 			},
 			{
-				"name": "employee_age",
+				"name": "gender",
+				"type": "String"
+			},
+			{
+				"name": "city",
+				"type": "String"
+			},
+			{
+				"name": "dno",
 				"type": "String"
 			}
 		]

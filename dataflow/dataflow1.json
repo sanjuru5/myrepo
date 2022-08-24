@@ -6,27 +6,50 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_blob_rgdevstgacct",
+						"referenceName": "Json1",
 						"type": "DatasetReference"
 					},
-					"name": "blobstgemployee"
+					"name": "source1"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DestinationDataset_o82",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
 				}
 			],
-			"transformations": [
-				{
-					"name": "AlterRow1"
-				}
-			],
-			"script": "source(output(\n\t\tEmployeeID as string,\n\t\tEmployeeName as string,\n\t\tSalary as string,\n\t\tDepartmentID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> blobstgemployee\nblobstgemployee alterRow(upsertIf(true())) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['EmployeeID'],\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tEmployeeID,\n\t\tEmployeeName,\n\t\tSalary,\n\t\tDepartmentID\n\t)) ~> sink1"
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          employee_name as string,",
+				"          employee_salary as integer,",
+				"          employee_age as integer,",
+				"          profile_image as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Stuctured.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          id,",
+				"          employee_name,",
+				"          employee_salary,",
+				"          employee_age",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
 		}
 	}
 }

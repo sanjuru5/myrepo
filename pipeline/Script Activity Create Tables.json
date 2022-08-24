@@ -1,0 +1,133 @@
+{
+	"name": "Script Activity Create Tables",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_myabtrainigsdb",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  NOT EXISTS (SELECT * FROM sys.tables\nWHERE name = N'Employee' AND type = 'U')\n\nBEGIN\nCREATE TABLE [dbo].[Employee](\n   ID INT,\n   Name Varchar(100),\n   Salary Int,\n   Location Varchar(100),\n   DEPT_NO INT\n) \n\nEND"
+						},
+						{
+							"type": "NonQuery",
+							"text": "IF  NOT EXISTS (SELECT * FROM sys.tables\nWHERE name = N'Department' AND type = 'U')\n\nBEGIN\nCREATE TABLE [dbo].[Department](\n   DEPT_NO INT,\n   Name Varchar(100),\n   MGR_NAME Varchar(100),\n) \n\nEND"
+						},
+						{
+							"type": "NonQuery",
+							"text": "truncate table Department;\ninsert into Department values(20, 'Marketing','bbbb');\ninsert into Department values(30, 'HR','cccc');\ninsert into Department values(40, 'IT','dddd');\ninsert into Department values(50, 'Admin','eeee');\n\nPRINT '4 Records INSERTED'"
+						},
+						{
+							"type": "Query",
+							"text": "select * from Department"
+						},
+						{
+							"type": "NonQuery",
+							"text": "TRUNCATE TABLE EMPLOYEE;\ninsert into Employee values(101,'aaaa', 100000, 'Hyderabad',10)\ninsert into Employee values(102,'bbbb', 100000, 'Bangalore',20)\ninsert into Employee values(103,'cccc', 100000, 'Chennai',30)\ninsert into Employee values(104,'dddd', 100000, 'Pune',40)\ninsert into Employee values(105,'eeee', 100000, 'Delhi',50)"
+						},
+						{
+							"type": "Query",
+							"text": "SELECT * FROM EMPLOYEE"
+						},
+						{
+							"type": "Query",
+							"text": "select * from Employee e inner join Department d on e.DEPT_NO=d.DEPT_NO"
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Script1').output.resultSets[2].rows",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Script2",
+							"type": "Script",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "ls_myabtrainigsdb",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "NonQuery",
+										"text": {
+											"value": "INSERT INTO EMP_Department Values \n(@{item().ID},\n'@{item().Name}',\n@{item().Salary},\n@{item().DEPT_NO},\n@{item().DEPT_NO},\n@{item().DEPT_NO},\n'@{item().Name}',\n'@{item().MGR_NAME}')",
+											"type": "Expression"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "SampleResults",
+					"value": {
+						"value": "@activity('Script1').output.resultSets[2].rows",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"SampleResults": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-08-22T05:18:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

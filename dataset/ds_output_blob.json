@@ -1,17 +1,16 @@
 {
-	"name": "DelimitedText1",
+	"name": "ds_output_blob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_mylake587",
+			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": "structured.csv",
-				"fileSystem": "output"
+				"type": "AzureBlobStorageLocation",
+				"container": "output"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

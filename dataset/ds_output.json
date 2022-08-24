@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "ds_output",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
@@ -10,13 +10,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "structured.csv",
 				"fileSystem": "output"
 			},
 			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"escapeChar": "",
+			"firstRowAsHeader": false,
+			"quoteChar": ""
 		},
 		"schema": []
 	},

@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText2",
+	"name": "ds_employees",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
@@ -10,32 +10,15 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000-414dc9ce-8d0d-4035-95d6-c35c3464ec4a-c000.csv",
-				"fileSystem": "output"
+				"fileName": "dbo.Employee.txt",
+				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "id",
-				"type": "String"
-			},
-			{
-				"name": "employee_name",
-				"type": "String"
-			},
-			{
-				"name": "employee_salary",
-				"type": "String"
-			},
-			{
-				"name": "employee_age",
-				"type": "String"
-			}
-		]
+		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }

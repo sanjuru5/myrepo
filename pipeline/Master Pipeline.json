@@ -1,0 +1,85 @@
+{
+	"name": "Master Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy Pipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-14.centralus.logic.azure.com:443/workflows/1f95821873a24750b584ab4e560eb452/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wOCUyKICgQpmkom10wt1AcFH8nArvB8QXGSEaDgCxTM",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\n    \"Title\" : \"Copy Pipeline\",\n    \"Color\" : \"Green\",\n    \"Message\" : \"Pipeline Ran Sucessfully\",\n    \"Data Factory Name\" : \"@{pipeline().DataFactory}\",\n    \"Pipeline Name\" : \"@{pipeline().Pipeline}\",\n    \"Pipeline RunId\" : \"@{pipeline().RunId}\",\n    \"Time\" : \"@{utcnow()}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web1_copy1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-14.centralus.logic.azure.com:443/workflows/1f95821873a24750b584ab4e560eb452/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wOCUyKICgQpmkom10wt1AcFH8nArvB8QXGSEaDgCxTM",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\n    \"Title\" : \"Copy Pipeline Status\",\n    \"Color\" : \"Red\",\n    \"Message\" : \"@{activity('Execute Pipeline1').error.message}\",\n    \"Data Factory Name\" : \"@{pipeline().DataFactory}\",\n    \"Pipeline Name\" : \"@{pipeline().Pipeline}\",\n    \"Pipeline RunId\" : \"@{pipeline().RunId}\",\n    \"Time\" : \"@{utcnow()}\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-08-16T04:53:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

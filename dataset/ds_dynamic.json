@@ -1,17 +1,25 @@
 {
-	"name": "DelimitedText2",
+	"name": "ds_dynamic",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000-414dc9ce-8d0d-4035-95d6-c35c3464ec4a-c000.csv",
-				"fileSystem": "output"
+				"fileName": {
+					"value": "@dataset().Filename",
+					"type": "Expression"
+				},
+				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
@@ -20,19 +28,7 @@
 		},
 		"schema": [
 			{
-				"name": "id",
-				"type": "String"
-			},
-			{
-				"name": "employee_name",
-				"type": "String"
-			},
-			{
-				"name": "employee_salary",
-				"type": "String"
-			},
-			{
-				"name": "employee_age",
+				"name": "1\t1970 Napa Ct.\t\tBothell\t79\t98011\tE6100000010CAE8BFC28BCE4474067A89189898A5EC0\t{9AADCB0D-36CF-483F-84D8-585C2D4EC6E9}\t2007-12-04 00:00:00",
 				"type": "String"
 			}
 		]

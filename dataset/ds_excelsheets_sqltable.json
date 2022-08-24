@@ -1,0 +1,27 @@
+{
+	"name": "ds_excelsheets_sqltable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ds_azuresqldatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sheetname",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Storeexcelsheets"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

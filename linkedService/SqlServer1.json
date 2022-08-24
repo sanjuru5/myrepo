@@ -5,11 +5,12 @@
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=False;data source=DESKTOP-CV7BVDK;initial catalog=MYDATABASE;user id=sa",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmODcyZWI2Mi04NDU1LTQwZjUtYjRjYS02MGU2MjExNzk3ZWQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"connectionString": "integrated security=True;data source=DESKTOP-CV7BVDK;initial catalog=MYDATABASE",
+			"userName": "DESKTOP-CV7BVDK\\Admin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkODAyOGRjNS0wYmFlLTRhODQtODk1MS1hM2Q1YjFiYjkzMDgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
-			"referenceName": "self-hosted-IR",
+			"referenceName": "SQL-SERVER-IR",
 			"type": "IntegrationRuntimeReference"
 		}
 	}

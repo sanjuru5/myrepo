@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText2",
+	"name": "GenericDataset",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
@@ -10,8 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000-414dc9ce-8d0d-4035-95d6-c35c3464ec4a-c000.csv",
-				"fileSystem": "output"
+				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
@@ -20,19 +19,6 @@
 		},
 		"schema": [
 			{
-				"name": "id",
-				"type": "String"
-			},
-			{
-				"name": "employee_name",
-				"type": "String"
-			},
-			{
-				"name": "employee_salary",
-				"type": "String"
-			},
-			{
-				"name": "employee_age",
 				"type": "String"
 			}
 		]

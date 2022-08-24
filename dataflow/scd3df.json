@@ -1,0 +1,134 @@
+{
+	"name": "scd3df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_scd3tab",
+						"type": "DatasetReference"
+					},
+					"name": "scd3delta"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_scd3tab_new",
+						"type": "DatasetReference"
+					},
+					"name": "scd3tab"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_scd3tab_new",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "lookup1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          name as string,",
+				"          salary as integer,",
+				"          gender as string,",
+				"          city as string,",
+				"          dno as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> scd3delta",
+				"source(output(",
+				"          id as integer,",
+				"          name as string,",
+				"          salary as integer,",
+				"          gender as string,",
+				"          pcity as string,",
+				"          city as string,",
+				"          dno as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> scd3tab",
+				"scd3tab derive(hashtab = md5(id,name,salary,gender,city,dno)) ~> derivedColumn2",
+				"lookup1 derive(pcity = citytab,",
+				"          citytab = city) ~> derivedColumn3",
+				"derivedColumn2 select(mapColumn(",
+				"          id,",
+				"          name,",
+				"          salary,",
+				"          gender,",
+				"          pcity,",
+				"          citytab = city,",
+				"          dno,",
+				"          hashtab",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn3 alterRow(upsertIf(true())) ~> alterRow1",
+				"scd3delta derive(hash = md5(id,name,salary,gender,city,dno)) ~> derivedColumn4",
+				"derivedColumn4, select1 exists(hash == hashtab,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1, select1 lookup(scd3delta@id == select1@id,",
+				"     multiple: true,",
+				"     broadcast: 'auto')~> lookup1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as integer,",
+				"          name as string,",
+				"          salary as integer,",
+				"          gender as string,",
+				"          pcity as string,",
+				"          city as string,",
+				"          dno as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['id'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          id = scd3delta@id,",
+				"          name = scd3delta@name,",
+				"          salary = scd3delta@salary,",
+				"          gender = scd3delta@gender,",
+				"          pcity,",
+				"          city,",
+				"          dno = scd3delta@dno",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

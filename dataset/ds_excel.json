@@ -1,38 +1,37 @@
 {
-	"name": "DelimitedText2",
+	"name": "ds_excel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_mylake587",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"sheetname": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Excel",
 		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().sheetname",
+				"type": "Expression"
+			},
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "part-00000-414dc9ce-8d0d-4035-95d6-c35c3464ec4a-c000.csv",
-				"fileSystem": "output"
+				"fileName": "excel-datasets.xlsx",
+				"fileSystem": "input"
 			},
-			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"firstRowAsHeader": true
 		},
 		"schema": [
 			{
-				"name": "id",
 				"type": "String"
 			},
 			{
-				"name": "employee_name",
 				"type": "String"
 			},
 			{
-				"name": "employee_salary",
-				"type": "String"
-			},
-			{
-				"name": "employee_age",
 				"type": "String"
 			}
 		]

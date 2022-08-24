@@ -1,0 +1,65 @@
+{
+	"name": "ds_employee_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_myabtrainigsdb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "adf8:00PM"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPLOYEE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FIRST_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EMAIL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PHONE_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HIRE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SALARY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COMMISSION_PCT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MANAGER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEPARTMENT_ID",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
