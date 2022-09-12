@@ -246,12 +246,16 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"tblStudent": {},
+									"tblStudent": {
+										"SourceTableName": "tbl_student",
+										"SourceTableSchema": "dbo"
+									},
 									"sink1": {
 										"TableSchema": "dbo",
 										"TableName": "talStructuredStudent"
 									}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
