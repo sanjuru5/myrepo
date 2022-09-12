@@ -5,6 +5,14 @@
 			"referenceName": "mylinkedserviceforazuresql",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SourceTableName": {
+				"type": "string"
+			},
+			"SourceTableSchema": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
@@ -31,8 +39,14 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "dbo",
-			"table": "tbl_student"
+			"schema": {
+				"value": "@dataset().SourceTableSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().SourceTableName",
+				"type": "Expression"
+			}
 		}
 	}
 }

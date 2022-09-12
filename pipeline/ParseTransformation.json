@@ -19,6 +19,10 @@
 						"referenceName": "parseTransformation",
 						"type": "DataFlowReference",
 						"datasetParameters": {
+							"tblStudent": {
+								"SourceTableName": "tbl_student",
+								"SourceTableSchema": "dbo"
+							},
 							"sink1": {
 								"TableSchema": "dbo",
 								"TableName": "talStructuredStudent"
