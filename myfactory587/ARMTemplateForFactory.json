@@ -217,6 +217,142 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Bulk Loading_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "fetch table information",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT * FROM INFORMATION_SCHEMA.TABLES where TABLE_TYPE='BASE TABLE'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_OnPremSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "read through all tables",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "fetch table information",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('fetch table information').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_sqlservertable",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableschema": {
+													"value": "@item().TABLE_SCHEMA",
+													"type": "Expression"
+												},
+												"tablename": {
+													"value": "@item().TABLE_NAME",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_BulkLoading",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableschema": {
+													"value": "@item().TABLE_SCHEMA",
+													"type": "Expression"
+												},
+												"tablename": {
+													"value": "@item().TABLE_NAME",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-08-24T04:45:44Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_OnPremSQLDataset')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqlservertable')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BulkLoading')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2675,6 +2811,30 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mynewfeature')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
@@ -5511,6 +5671,242 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Unpiviot')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "ls_mylake587",
+								"type": "LinkedServiceReference"
+							},
+							"name": "UnpivotDataset"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "mylinkedserviceforazuresql",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "unpivot1"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "unpivot2"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "derivedColumn3"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "select3"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Company as string,",
+						"          {Product Group} as string,",
+						"          {Product SubClass} as string,",
+						"          {Reporting ID} as string,",
+						"          { Item} as string,",
+						"          {Item name} as string,",
+						"          {FOB/NON FOB} as string,",
+						"          {Jan Qty} as short,",
+						"          {Jan Inv Sales} as double,",
+						"          {Jan MTL} as double,",
+						"          {Jan Contribution} as double,",
+						"          {Feb Qty} as short,",
+						"          {Feb Inv Sales} as double,",
+						"          {Feb MTL} as double,",
+						"          {Feb Contribution} as double,",
+						"          {Mar Qty} as short,",
+						"          {Mar Inv Sales} as double,",
+						"          {Mar MTL} as double,",
+						"          {Mar Contribution} as double,",
+						"          {Apr Qty} as short,",
+						"          {Apr Inv Sales} as double,",
+						"          {Apr MTL} as double,",
+						"          {Apr Contribution} as double,",
+						"          {May Qty} as short,",
+						"          {May Inv Sales} as double,",
+						"          {May MTL} as double,",
+						"          {May Contribution} as double,",
+						"          {Jun Qty} as short,",
+						"          {Jun Inv Sales} as double,",
+						"          {Jun MTL} as double,",
+						"          {Jun Contribution} as double,",
+						"          {Jul Qty} as double,",
+						"          {Jul Inv Sales} as double,",
+						"          {Jul MTL} as double,",
+						"          {Jul Contribution} as double,",
+						"          {Aug Qty} as double,",
+						"          {Aug Inv Sales} as double,",
+						"          {Aug MTL} as double,",
+						"          {Aug Contribution} as double,",
+						"          {Sep Qty} as double,",
+						"          {Sep Inv Sales} as double,",
+						"          {Sep MTL} as double,",
+						"          {Sep Contribution} as double,",
+						"          {Oct Qty} as double,",
+						"          {Oct Inv Sales} as double,",
+						"          {Oct MTL} as double,",
+						"          {Oct Contribution} as double,",
+						"          {Nov Qty} as double,",
+						"          {Nov Inv Sales} as double,",
+						"          {Nov MTL} as double,",
+						"          {Nov Contribution} as double,",
+						"          {Dec Qty} as double,",
+						"          {Dec Inv Sales} as double,",
+						"          {Dec MTL} as double,",
+						"          {Dec Contribution} as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'excel',",
+						"     fileSystem: 'input',",
+						"     fileName: '6+6 2022 Sales and Contribution data for Azure upload- BAU & BNZ.xlsx',",
+						"     sheetName: 'Jan-May Act-Jun-Dec 6+6 Data',",
+						"     firstRowAsHeader: true) ~> UnpivotDataset",
+						"UnpivotDataset derive(each(match(type!='string'), $$ = toString($$))) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          Company,",
+						"          {Product Group},",
+						"          {Product SubClass},",
+						"          {Reporting ID},",
+						"          { Item},",
+						"          {Item name},",
+						"          {FOB/NON FOB},",
+						"          {Jan Qty},",
+						"          {Feb Qty},",
+						"          {Mar Qty},",
+						"          {Apr Qty},",
+						"          {May Qty},",
+						"          {Jun Qty},",
+						"          {Jul Qty},",
+						"          {Aug Qty},",
+						"          {Sep Qty},",
+						"          {Oct Qty},",
+						"          {Nov Qty},",
+						"          {Dec Qty}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 unpivot(output(",
+						"          Month as string,",
+						"          Qty as string",
+						"     ),",
+						"     ungroupBy(Company,",
+						"          {Product Group},",
+						"          {Product SubClass},",
+						"          {Reporting ID},",
+						"          { Item},",
+						"          {Item name},",
+						"          {FOB/NON FOB}),",
+						"     lateral: true,",
+						"     ignoreNullPivots: false) ~> unpivot1",
+						"derivedColumn1 select(mapColumn(",
+						"          Company,",
+						"          {Product Group},",
+						"          {Product SubClass},",
+						"          {Reporting ID},",
+						"          { Item},",
+						"          {Item name},",
+						"          {FOB/NON FOB},",
+						"          {Jan Inv Sales},",
+						"          {Feb Inv Sales},",
+						"          {Mar Inv Sales},",
+						"          {Apr Inv Sales},",
+						"          {May Inv Sales},",
+						"          {Jun Inv Sales},",
+						"          {Jul Inv Sales},",
+						"          {Aug Inv Sales},",
+						"          {Sep Inv Sales},",
+						"          {Oct Inv Sales},",
+						"          {Nov Inv Sales},",
+						"          {Dec Inv Sales}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2 unpivot(output(",
+						"          Month as string,",
+						"          {Inv Sales} as string",
+						"     ),",
+						"     ungroupBy(Company,",
+						"          {Product Group},",
+						"          {Product SubClass},",
+						"          {Reporting ID},",
+						"          { Item},",
+						"          {Item name},",
+						"          {FOB/NON FOB}),",
+						"     lateral: true,",
+						"     ignoreNullPivots: false) ~> unpivot2",
+						"unpivot2 derive(Month = substring(Month, 1, 3)) ~> derivedColumn2",
+						"unpivot1 derive(Month = substring(Month, 1, 3)) ~> derivedColumn3",
+						"derivedColumn2, derivedColumn3 join(unpivot2@{ Item} == unpivot1@{ Item}",
+						"     && derivedColumn2@Month == derivedColumn3@Month,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 select(mapColumn(",
+						"          Company = unpivot2@Company,",
+						"          {Product Group} = unpivot2@{Product Group},",
+						"          {Product SubClass} = unpivot2@{Product SubClass},",
+						"          {Reporting ID} = unpivot2@{Reporting ID},",
+						"          { Item} = unpivot2@{ Item},",
+						"          {Item name} = unpivot2@{Item name},",
+						"          {FOB/NON FOB} = unpivot2@{FOB/NON FOB},",
+						"          Month = derivedColumn2@Month,",
+						"          {Inv Sales},",
+						"          Qty",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select3",
+						"select3 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'Salesdata',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_mylake587')]",
+				"[concat(variables('factoryId'), '/linkedServices/mylinkedserviceforazuresql')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -5832,6 +6228,236 @@
 				"[concat(variables('factoryId'), '/datasets/november1')]",
 				"[concat(variables('factoryId'), '/datasets/november2')]",
 				"[concat(variables('factoryId'), '/datasets/output_Sinkdataset_uniontransformation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/parseTransformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_tblStudent",
+								"type": "DatasetReference"
+							},
+							"name": "tblStudent"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_StructredStudntdata",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "parseDelimitedtextvalues"
+						},
+						{
+							"name": "parseJsoncontent"
+						},
+						{
+							"name": "parsexml"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as integer,",
+						"          name as string,",
+						"          qualification as string,",
+						"          university as string,",
+						"          address as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> tblStudent",
+						"tblStudent parse(newqual = qualification ? (qual1 as string,",
+						"          qual2 as string,",
+						"          qual3 as string),",
+						"     format: 'delimited',",
+						"     columnNamesAsHeader: false,",
+						"     columnDelimiter: '|',",
+						"     nullValue: '') ~> parseDelimitedtextvalues",
+						"parseDelimitedtextvalues parse(newUniv = university ? (GradUniv as string,",
+						"          PGUniv as string,",
+						"          ResearchUniv as string),",
+						"     format: 'json',",
+						"     documentForm: 'singleDocument') ~> parseJsoncontent",
+						"parseJsoncontent parse(newaddress = address ? (address as (city as string,",
+						"          state as string,",
+						"          country as string)),",
+						"     format: 'xml',",
+						"     namespaces: true) ~> parsexml",
+						"parsexml select(mapColumn(",
+						"          id,",
+						"          name,",
+						"          GradQual = newqual.qual1,",
+						"          PGQual = newqual.qual2,",
+						"          ResearchQual = newqual.qual3,",
+						"          city = newaddress.address.city,",
+						"          state = newaddress.address.state,",
+						"          country = newaddress.address.country,",
+						"          GradUniv = newUniv.GradUniv,",
+						"          PGUniv = newUniv.PGUniv,",
+						"          ResearchUniv = newUniv.ResearchUniv",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_tblStudent')]",
+				"[concat(variables('factoryId'), '/datasets/ds_StructredStudntdata')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_tblStudent')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "mylinkedserviceforazuresql",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "name",
+						"type": "varchar"
+					},
+					{
+						"name": "qualification",
+						"type": "varchar"
+					},
+					{
+						"name": "university",
+						"type": "varchar"
+					},
+					{
+						"name": "address",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tbl_student"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/mylinkedserviceforazuresql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_StructredStudntdata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "mylinkedserviceforazuresql",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableSchema": {
+						"type": "string"
+					},
+					"TableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().TableSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/mylinkedserviceforazuresql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParseTransformation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "parseTransformation",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"tblStudent": {},
+									"sink1": {
+										"TableSchema": "dbo",
+										"TableName": "talStructuredStudent"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/parseTransformation')]"
 			]
 		}
 	]
