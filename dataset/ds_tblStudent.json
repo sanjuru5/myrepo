@@ -1,0 +1,38 @@
+{
+	"name": "ds_tblStudent",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mylinkedserviceforazuresql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "name",
+				"type": "varchar"
+			},
+			{
+				"name": "qualification",
+				"type": "varchar"
+			},
+			{
+				"name": "university",
+				"type": "varchar"
+			},
+			{
+				"name": "address",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_student"
+		}
+	}
+}

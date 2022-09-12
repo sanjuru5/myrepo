@@ -1,0 +1,95 @@
+{
+	"name": "parseTransformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_tblStudent",
+						"type": "DatasetReference"
+					},
+					"name": "tblStudent"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_StructredStudntdata",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "parseDelimitedtextvalues"
+				},
+				{
+					"name": "parseJsoncontent"
+				},
+				{
+					"name": "parsexml"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          name as string,",
+				"          qualification as string,",
+				"          university as string,",
+				"          address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> tblStudent",
+				"tblStudent parse(newqual = qualification ? (qual1 as string,",
+				"          qual2 as string,",
+				"          qual3 as string),",
+				"     format: 'delimited',",
+				"     columnNamesAsHeader: false,",
+				"     columnDelimiter: '|',",
+				"     nullValue: '') ~> parseDelimitedtextvalues",
+				"parseDelimitedtextvalues parse(newUniv = university ? (GradUniv as string,",
+				"          PGUniv as string,",
+				"          ResearchUniv as string),",
+				"     format: 'json',",
+				"     documentForm: 'singleDocument') ~> parseJsoncontent",
+				"parseJsoncontent parse(newaddress = address ? (address as (city as string,",
+				"          state as string,",
+				"          country as string)),",
+				"     format: 'xml',",
+				"     namespaces: true) ~> parsexml",
+				"parsexml select(mapColumn(",
+				"          id,",
+				"          name,",
+				"          GradQual = newqual.qual1,",
+				"          PGQual = newqual.qual2,",
+				"          ResearchQual = newqual.qual3,",
+				"          city = newaddress.address.city,",
+				"          state = newaddress.address.state,",
+				"          country = newaddress.address.country,",
+				"          GradUniv = newUniv.GradUniv,",
+				"          PGUniv = newUniv.PGUniv,",
+				"          ResearchUniv = newUniv.ResearchUniv",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
