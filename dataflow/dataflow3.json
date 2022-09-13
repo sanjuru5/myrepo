@@ -1,0 +1,66 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "mylinkedserviceforazuresql",
+						"type": "LinkedServiceReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "attendancefiles",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "parse1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          jsonvalue as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'jsoninfo',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> source1",
+				"source1 parse(json = jsonvalue ? (firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          address as string,",
+				"          phoneNumbers as string[],",
+				"          skills as string[]),",
+				"     format: 'json',",
+				"     documentForm: 'arrayOfDocuments') ~> parse1",
+				"parse1 select(mapColumn(",
+				"          firstName = json.firstName,",
+				"          lastName = json.lastName,",
+				"          gender = json.gender,",
+				"          address = json.address",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
