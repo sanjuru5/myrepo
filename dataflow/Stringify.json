@@ -1,0 +1,65 @@
+{
+	"name": "Stringify",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_StructredStudntdata",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "stringify1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          address as (city as string, state as string, streetAddress as short),",
+				"          age as short,",
+				"          firstName as string,",
+				"          gender as string,",
+				"          lastName as string,",
+				"          phoneNumbers as (number as long, type as string)[],",
+				"          skills as string[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source1",
+				"source1 stringify(address = address ? string,",
+				"          phoneNumbers = phoneNumbers ? string,",
+				"     format: 'json') ~> stringify1",
+				"stringify1 derive(skills = toString(skills),",
+				"          address = toString(address),",
+				"          phoneNumbers = toString(phoneNumbers)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

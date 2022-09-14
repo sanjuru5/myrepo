@@ -1,0 +1,19 @@
+{
+	"name": "Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_mylake587_new",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sample2.json",
+				"fileSystem": "input1"
+			}
+		},
+		"schema": {}
+	}
+}
