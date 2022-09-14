@@ -1,0 +1,21 @@
+{
+	"name": "ds_Jsondata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mylinkedserviceforazuresql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "jsonvalue",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "jsondata"
+		}
+	}
+}

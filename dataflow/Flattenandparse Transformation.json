@@ -1,0 +1,90 @@
+{
+	"name": "Flattenandparse Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_Jsondata",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "parse1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "flatten2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          jsonvalue as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 parse(newJson = jsonvalue ? (firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          age as string,",
+				"          address as string,",
+				"          phoneNumbers as string[],",
+				"          skills as string[]),",
+				"     format: 'json',",
+				"     documentForm: 'arrayOfDocuments') ~> parse1",
+				"flatten2 select(mapColumn(",
+				"          FirstName = newJson.firstName,",
+				"          lastName = newJson.lastName,",
+				"          gender = newJson.gender,",
+				"          age = newJson.age",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"parse1 foldDown(unroll(newJson.phoneNumbers),",
+				"     mapColumn(",
+				"          FirstName = newJson.firstName,",
+				"          lastName = newJson.lastName,",
+				"          gender = newJson.gender,",
+				"          address = newJson.address,",
+				"          age = newJson.age,",
+				"          phoneNumbers = newJson.phoneNumbers,",
+				"          skills = newJson.skills",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 foldDown(unroll(skills),",
+				"     mapColumn(",
+				"          newJson = FirstName,",
+				"          lastName,",
+				"          gender,",
+				"          address,",
+				"          age,",
+				"          phoneNumbers,",
+				"          skills",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
