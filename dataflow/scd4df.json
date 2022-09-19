@@ -57,7 +57,7 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          id as string,",
+				"          id as integer,",
 				"          name as string,",
 				"          location as string",
 				"     ),",
