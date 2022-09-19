@@ -1,0 +1,30 @@
+{
+	"name": "ds_s4tab",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mylinkedserviceforazuresql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "name",
+				"type": "varchar"
+			},
+			{
+				"name": "location",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "s4tab"
+		}
+	}
+}
