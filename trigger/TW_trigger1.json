@@ -1,0 +1,30 @@
+{
+	"name": "TW_trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "pipeline8",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"StartDate": "@trigger().outputs.windowStartTime",
+				"EndDate": "@trigger().outputs.windowEndTime"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Month",
+			"interval": 1,
+			"startTime": "2017-01-01T00:00:00Z",
+			"endTime": "2022-09-27T00:17:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
